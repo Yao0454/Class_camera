@@ -1,18 +1,17 @@
-from scapy.all import *
-import telegram
-import asyncio
-from asyncio import Queue
-import threading
-import time
 import os
 import sys
+import time
+import threading
+import asyncio
+import telegram
+from scapy.all import *
 
 # Telegram Bot 配置
 TOKEN = "7638064089:AAF7VsOdEzRpXLeRm8eSeT5btqoT9jO2rls"  # 你的 Telegram 机器人 Token
 CHAT_ID = "5868316049"  # 你的 chat_id
 
 bot = telegram.Bot(token=TOKEN)
-queue = Queue()
+queue = asyncio.Queue()
 
 # 发送 Telegram 通知函数 (异步)
 async def send_notification(title, message):
@@ -21,7 +20,7 @@ async def send_notification(title, message):
         print(f"通知发送成功: {title} - {message}")
     except telegram.error.NetworkError as e:
         print(f"网络错误：{e}，将在5秒后重启脚本...")
-        time.sleep(5)
+        await asyncio.sleep(5)  # 等待后再重启脚本
         restart_program()
     except telegram.error.TelegramError as e:
         print(f"消息发送失败，错误信息: {e}")
@@ -69,7 +68,7 @@ if __name__ == "__main__":
     loop.create_task(notification_worker())
 
     # 发送开机通知
-    asyncio.run(send_notification("系统通知", "电脑开机"))
+    asyncio.run_coroutine_threadsafe(send_notification("系统通知", "电脑开机"), loop)
 
     # 在独立的线程中启动嗅探器
     sniff_thread = threading.Thread(target=start_sniffing)
