@@ -7,8 +7,8 @@ import telegram
 from scapy.all import *
 
 # Telegram Bot 配置
-TOKEN = "7638064089:AAF7VsOdEzRpXLeRm8eSeT5btqoT9jO2rls"  # 你的 Telegram 机器人 Token
-CHAT_ID = "5868316049"  # 你的 chat_id
+TOKEN = "Token"  # 你的 Telegram 机器人 Token
+CHAT_ID = "chat_id"  # 你的 chat_id
 
 bot = telegram.Bot(token=TOKEN)
 queue = asyncio.Queue()
